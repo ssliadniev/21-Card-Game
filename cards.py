@@ -16,6 +16,9 @@ class Cards:
         self.points = points
         self.image = Card(rank, suit[0])
 
+    def get_card_image(self):
+        return self.image
+
     def __str__(self):
         return f"{self.rank} of {self.suit}"
 
