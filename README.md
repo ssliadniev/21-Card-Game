@@ -8,7 +8,7 @@ If you managed to score more points than the dealer, then you won.
 Cards are valued according to their value, except:
 
 | Rank  | Points |
------------------
+|-------|--------|
 | Jack  |    2   |
 | Queen |    3   |
 | King  |    4   |
