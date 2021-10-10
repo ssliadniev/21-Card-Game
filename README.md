@@ -3,7 +3,8 @@
 The goal of the game is to score more points than the dealer's (but not more than 21, more than 21 - this is an automatic defeat, which is called bust). 
 If you managed to score more points than the dealer, then you won.
 
-## Cards points
+
+### Cards points
 
 Cards are valued according to their value, except:
 
@@ -15,5 +16,6 @@ Cards are valued according to their value, except:
 | Ace   |   11   |
 
 
-## Getting started
+
+### Getting started
 
