@@ -1,50 +1,30 @@
-from cards import Deck, Card
-import time
-from typing import Optional
+from terminal_playing_cards import View
 
 
 class Player:
     """This class represents a player in a 21 game."""
 
-    def __init__(self, cards: list):
-        self._cards: list = cards
-        self.action: classmethod = self.get_player_action()
-        self.points: int = self.get_points_of_cards()
-        self.is_stand: bool = False
-        self.is_lose: bool = False
-
-    def get_player_action(self, decision: Optional[str, None] = None):
-        actions = {
-            "1": "",
-            "2": ""
-        }
-        action = actions.get(decision)
-        if action is None:
-            action = self.get_player_action('Make your decision = ')
-        return action
+    def __init__(self, isDealer):
+        self._cards: list = []
+        self.isDealer: bool = isDealer
+        self.score: int = 0
 
     def hit(self, card):
-        self._cards.append(card)
-        self.points = self.get_points_of_cards()
+        self._cards.extend(card)
+        self.get_points_of_cards()
+        if self.score > 21:
+            return True
+        return False
 
     def get_points_of_cards(self):
-        points: int = sum([card.points for card in self._cards])
-        return points
+        self.score = sum([card.points for card in self._cards])
+        return self.score
 
-    def has_21(self):
-        return self.get_points_of_cards() > 21
-
-    def get_card(self):
-        return self._cards
-
-
-class Dealer(Player):
-
-    def __init__(self, cards):
-        super().__init__("Dealer", cards)
-
-    def _make_action(self):
-        if self.points < 17:
-            return super(Dealer, self).get_player_action("1")
+    def show(self):
+        if self.isDealer:
+            print("Dealer's cards")
         else:
-            return super(Dealer, self).get_player_action("2")
+            print("Players cards")
+        cards_view = View([card.card for card in self._cards])
+        print(cards_view)
+        print(f"Score: {self.score}")
