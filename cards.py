@@ -1,14 +1,14 @@
 from itertools import product
-from random import shuffle
+from random import shuffle, choice
 
 from terminal_playing_cards import Card
+
+SUITS = ("spades", "hearts", "diamonds", "clubs")
+RANKS = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
 
 
 class Cards:
     """A card object, which have a suit and rank."""
-
-    SUITS = ("spades", "hearts", "diamonds", "clubs")
-    RANKS = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
 
     def __init__(self, rank, suit, points):
         self.card = Card(rank, suit, value=points, hidden=False, picture=True)
@@ -17,7 +17,7 @@ class Cards:
         return f"{self.card}"
 
 
-class Deck(object):
+class Deck:
     """A deck containing 52 cards."""
 
     def __init__(self):
@@ -25,10 +25,10 @@ class Deck(object):
         shuffle(self.deck)
 
     @staticmethod
-    def generate_deck():
+    def generate_deck() -> list:
         points: int = 0
         cards: list = []
-        for suit, rank in product(Cards.SUITS, Cards.RANKS):
+        for suit, rank in product(SUITS, RANKS):
             if rank == "A":
                 points = 11
             elif rank == "K":
@@ -43,8 +43,13 @@ class Deck(object):
             cards.append(card)
         return cards
 
-    def get_cards(self):
-        return [self.deck.pop() for _ in range(2)]
+    def get_card(self, amount) -> list:
+        cards: list = []
+        for _ in range(amount):
+            card = choice(self.deck)
+            self.deck.remove(card)
+            cards.append(card)
+        return cards
 
     def __len__(self):
         return len(self.deck)
