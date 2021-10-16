@@ -1,54 +1,68 @@
 from cards import Deck
-from player import Player, Dealer
+from player import Player
 
 
 class Game:
+    """This class represents the gameplay of 21 games."""
 
     def __init__(self):
-        self._deck = Deck()
-        self._player = Player()
-        self._dealer = Dealer()
+        self.deck = Deck()
+        self.player = Player(False, self.deck)
+        self.dealer = Player(True, self.deck)
 
-    def _print_actions(self):
-        print("Availabes actions:\n1. Hit card.\n2.Stands.\n3.Quit.")
+    def play(self) -> None:
+        player_status = self.player.deal()
+        dealer_status = self.dealer.deal()
 
-    def _start_game(self):
-        game_over = False
-        self._print_actions()
-        while not game_over:
-            self._play_game()
+        self.player.show_cards()
 
-    def _play_game(self):
-        self._play_game(self._player)
-        self._play_game(self._dealer)
+        if player_status:
+            print("Player won! Congrats!")
+            if dealer_status:
+                print("Dealer and Player won! It's a tie.")
+            return
 
-    def hit_card(self, player):
-        player.add_card(self.deck.get_cards(1))
-        self.deck.print_cards(player)
-        if player.check_sum():
-            self.output(player, "Sum of cards goes over 21! Player lost!")
-            player.is_stand = True
-            player.is_lose = True
-            self.is_active = False
+        if self.player_process_game():
+            return
 
-    def stand(self, player):
-        self.output(player, "Stands!")
-        player.is_stand = True
+        self.dealer.show_cards()
+        if player_status:
+            print("\nDealer won!")
+            return
 
-    def quit(self, player):
-        self.output(player, "Quit the game!")
-        player.is_stand = True
-        player.is_lose = True
-        self.is_active = False
+        if self.dealer_process_game():
+            return
 
-    def find_winner(self):
-        candidates = [player for player in self.players if not player.is_lose]
-        if len(candidates) == 1:
-            print(f"*  {candidates[0].name} - WINNER!  *")
-        else:
-            winner = max(candidates, key=lambda player: player.sum_of_cards)
-            print(f"*  {winner.name} - WINNER!  *")
-        self.is_active = False
+        if self.dealer.get_points_of_cards() == self.player.get_points_of_cards():
+            print("\nIt's a tie. Better luck next time!")
+        elif self.dealer.get_points_of_cards() > self.player.get_points_of_cards():
+            print("\nDealer won. Good Game!")
+        elif self.dealer.get_points_of_cards() < self.player.get_points_of_cards():
+            print("\nPlayer won. Congratulations!")
 
-    def output(self, curr_player, text):
-        print(f"[{curr_player.name}] {text} \n")
+    def player_process_game(self) -> bool:
+        input_action: str = ""
+        while input_action != "Stand":
+            bust: bool = False
+            input_action = input("Hit or Stand?")
+            if input_action == "Hit":
+                bust = self.player.hit()
+                self.player.show_cards()
+            if bust:
+                print("\nPlayer has lost. Good Game!")
+                return True
+        return False
+
+    def dealer_process_game(self) -> bool:
+        while self.dealer.get_points_of_cards() < 17:
+            if self.dealer.hit():
+                self.dealer.show_cards()
+                print("\nDealer has lost. Congrats!")
+                return True
+            self.dealer.show_cards()
+        return False
+
+
+if __name__ == "__main__":
+    game = Game()
+    game.play()
