@@ -1,30 +1,39 @@
 from terminal_playing_cards import View
+from cards import Deck
 
 
 class Player:
     """This class represents a player in a 21 game."""
 
-    def __init__(self, isDealer):
-        self._cards: list = []
+    def __init__(self, isDealer, deck):
+        self.cards: list = []
         self.isDealer: bool = isDealer
+        self.deck = deck
         self.score: int = 0
 
-    def hit(self, card):
-        self._cards.extend(card)
+    def hit(self) -> bool:
+        self.cards.extend(self.deck.get_card(1))
         self.get_points_of_cards()
         if self.score > 21:
             return True
         return False
 
-    def get_points_of_cards(self):
-        self.score = sum([card.points for card in self._cards])
+    def deal(self) -> bool:
+        self.cards.extend(self.deck.get_card(2))
+        self.get_points_of_cards()
+        if self.score == 21:
+            return True
+        return False
+
+    def get_points_of_cards(self) -> int:
+        self.score = sum([card.card.value for card in self.cards])
         return self.score
 
-    def show(self):
+    def show_cards(self) -> None:
         if self.isDealer:
-            print("Dealer's cards")
+            print("\nDealer's cards:")
         else:
-            print("Players cards")
-        cards_view = View([card.card for card in self._cards])
+            print("\nPlayers cards:")
+        cards_view = View([card.card for card in self.cards])
         print(cards_view)
         print(f"Score: {self.score}")
