@@ -1,5 +1,5 @@
 from terminal_playing_cards import View
-from cards import Deck
+from cards import Cards
 
 
 class Player:
@@ -26,7 +26,7 @@ class Player:
         return False
 
     def get_points_of_cards(self) -> int:
-        self.score = sum([card.card.value for card in self.cards])
+        self.score = sum([card.value for card in self.cards])
         return self.score
 
     def show_cards(self) -> None:
@@ -34,6 +34,5 @@ class Player:
             print("\nDealer's cards:")
         else:
             print("\nPlayers cards:")
-        cards_view = View([card.card for card in self.cards])
-        print(cards_view)
+        print(View(self.cards))
         print(f"Score: {self.score}")
