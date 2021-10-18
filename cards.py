@@ -8,16 +8,6 @@ RANKS = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
 
 
 class Cards:
-    """A card object, which have a suit and rank."""
-
-    def __init__(self, rank, suit, points):
-        self.card = Card(rank, suit, value=points, hidden=False, picture=True)
-
-    def __str__(self):
-        return f"{self.card}"
-
-
-class Deck:
     """A deck containing 52 cards."""
 
     def __init__(self):
@@ -39,7 +29,7 @@ class Deck:
                 points = 2
             elif rank.isdigit():
                 points = int(rank)
-            card = Cards(rank, suit, points)
+            card = Card(rank, suit, value=points, hidden=False, picture=True)
             cards.append(card)
         return cards
 
