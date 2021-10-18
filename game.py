@@ -1,4 +1,4 @@
-from cards import Deck
+from cards import Cards
 from player import Player
 
 
@@ -6,7 +6,7 @@ class Game:
     """This class represents the gameplay of 21 games."""
 
     def __init__(self):
-        self.deck = Deck()
+        self.deck = Cards()
         self.player = Player(False, self.deck)
         self.dealer = Player(True, self.deck)
 
