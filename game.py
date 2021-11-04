@@ -1,5 +1,6 @@
 from cards import Cards
 from player import Player
+from random import choice
 
 
 class Game:
@@ -7,60 +8,58 @@ class Game:
 
     def __init__(self):
         self.deck = Cards()
-        self.player = Player(False, self.deck)
-        self.dealer = Player(True, self.deck)
+        self.players = self.set_players()
+        self.playing = True
 
     def play(self) -> None:
-        player_status = self.player.deal()
-        dealer_status = self.dealer.deal()
+        while self.playing:
+            self.players = list(filter(lambda player: (player.ingame), self.players))
+            for player in self.players:
+                player.show_cards()
+                self.player_process_game(player)
+                if player.score > 21:
+                    player.ingame = False
+                    print(f"{player.name} leaves the game.")
+                elif player.score == 21:
+                    print(f"{player.name} won!")
+                    self.playing = False
 
-        self.player.show_cards()
+    @staticmethod
+    def set_players():
+        while True:
+            try:
+                number_players = int(input("Please, enter number of players: "))
+                assert number_players > 0
+                break
+            except:
+                print("Nope")
+        players = [Player(False) for _ in range(number_players)]
+        players.append(Player(True))
+        for index, player in enumerate(players):
+            player.name = player.get_name(index)
+            player.hit(2)
+        return players
 
-        if player_status:
-            print("Player won! Congrats!")
-            if dealer_status:
-                print("Dealer and Player won! It's a tie.")
-            return
-
-        if self.player_process_game():
-            return
-
-        self.dealer.show_cards()
-        if player_status:
-            print("\nDealer won!")
-            return
-
-        if self.dealer_process_game():
-            return
-
-        if self.dealer.get_points_of_cards() == self.player.get_points_of_cards():
-            print("\nIt's a tie. Better luck next time!")
-        elif self.dealer.get_points_of_cards() > self.player.get_points_of_cards():
-            print("\nDealer won. Good Game!")
-        elif self.dealer.get_points_of_cards() < self.player.get_points_of_cards():
-            print("\nPlayer won. Congratulations!")
-
-    def player_process_game(self) -> bool:
-        input_action: str = ""
-        while input_action != "Stand":
-            bust: bool = False
-            input_action = input("Hit or Stand?")
-            if input_action == "Hit":
-                bust = self.player.hit()
-                self.player.show_cards()
-            if bust:
-                print("\nPlayer has lost. Good Game!")
-                return True
-        return False
-
-    def dealer_process_game(self) -> bool:
-        while self.dealer.get_points_of_cards() < 17:
-            if self.dealer.hit():
-                self.dealer.show_cards()
-                print("\nDealer has lost. Congrats!")
-                return True
-            self.dealer.show_cards()
-        return False
+    @staticmethod
+    def player_process_game(player):
+        available_actions = ("hit", "stand")
+        if player.isDealer:
+            dealer_action = choice(["hit", "stand"])
+            if dealer_action == "hit":
+                player.hit(1)
+                player.show_cards()
+            elif dealer_action == "stand":
+                print("Dealer stood.")
+        else:
+            while True:
+                player_action = input("Hit or Stand?").lower()
+                if player_action in available_actions:
+                    break
+            if player_action == "hit":
+                player.hit(1)
+                player.show_cards()
+            elif player_action == "stand":
+                print(f"{player.name} stood.")
 
 
 if __name__ == "__main__":
