@@ -8,30 +8,20 @@ class Player:
     def __init__(self, isDealer):
         self.cards: list = []
         self.isDealer: bool = isDealer
-        self.name = self.get_name()
-        self.score: int = 0
+        self.name: str
+        self.score: int = self.get_points_of_cards()
+        self.ingame: bool = True
 
-    def hit(self) -> bool:
+    def hit(self, number) -> None:
         deck = Cards()
-        self.cards.extend(deck.get_card(1))
+        self.cards.extend(deck.get_card(number))
         self.get_points_of_cards()
-        if self.score > 21:
-            return True
-        return False
 
-    def deal(self) -> bool:
-        deck = Cards()
-        self.cards.extend(deck.get_card(2))
-        self.get_points_of_cards()
-        if self.score == 21:
-            return True
-        return False
-
-    def get_name(self):
+    def get_name(self, number):
         if self.isDealer:
-            self.name = input("Your name: ")
-        else:
             self.name = "Dealer"
+        else:
+            self.name = input(f"Enter name of player {number + 1}:")
         return self.name
 
     def get_points_of_cards(self) -> int:
@@ -40,8 +30,8 @@ class Player:
 
     def show_cards(self) -> None:
         if self.isDealer:
-            print("\nDealer's cards:")
+            print(f"\nDealer's cards:")
         else:
-            print("\nPlayers cards:")
+            print(f"\n{self.name}'s cards:")
         print(View(self.cards))
         print(f"Score: {self.score}")
