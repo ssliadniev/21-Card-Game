@@ -3,22 +3,21 @@ from random import shuffle, choice
 
 from terminal_playing_cards import Card
 
-SUITS = ("spades", "hearts", "diamonds", "clubs")
-RANKS = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
-
 
 class Cards:
     """A deck containing 52 cards."""
+
+    SUITS = ("spades", "hearts", "diamonds", "clubs")
+    RANKS = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
 
     def __init__(self):
         self.deck = self.generate_deck()
         shuffle(self.deck)
 
-    @staticmethod
-    def generate_deck() -> list:
+    def generate_deck(self) -> list:
         points: int = 0
         cards: list = []
-        for suit, rank in product(SUITS, RANKS):
+        for suit, rank in product(self.SUITS, self.RANKS):
             if rank == "A":
                 points = 11
             elif rank == "K":
