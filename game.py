@@ -1,6 +1,8 @@
+import time
+from random import randint
+
 from cards import Cards
 from player import Player
-from random import choice
 
 
 class Game:
@@ -14,6 +16,9 @@ class Game:
     def play(self) -> None:
         while self.playing:
             self.players = list(filter(lambda player: (player.ingame), self.players))
+            if len(self.players) == 1:
+                print(f"{self.players[0].name} won!")
+                break
             for player in self.players:
                 player.show_cards()
                 self.player_process_game(player)
@@ -21,7 +26,7 @@ class Game:
                     player.ingame = False
                     print(f"{player.name} leaves the game.")
                 elif player.score == 21:
-                    print(f"{player.name} won!")
+                    print(f"{player.name} won!!")
                     self.playing = False
 
     @staticmethod
@@ -37,18 +42,18 @@ class Game:
         players.append(Player(True))
         for index, player in enumerate(players):
             player.name = player.get_name(index)
-            player.hit(2)
+            player.hit(cards=Cards().get_cards(amount=2))
         return players
 
     @staticmethod
     def player_process_game(player):
         available_actions = ("hit", "stand")
         if player.isDealer:
-            dealer_action = choice(["hit", "stand"])
-            if dealer_action == "hit":
-                player.hit(1)
+            time.sleep(randint(1, 6))
+            if player.score <= 17:
+                player.hit(cards=Cards().get_cards())
                 player.show_cards()
-            elif dealer_action == "stand":
+            elif player.score > 17:
                 print("Dealer stood.")
         else:
             while True:
@@ -56,7 +61,7 @@ class Game:
                 if player_action in available_actions:
                     break
             if player_action == "hit":
-                player.hit(1)
+                player.hit(cards=Cards().get_cards())
                 player.show_cards()
             elif player_action == "stand":
                 print(f"{player.name} stood.")
