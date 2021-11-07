@@ -1,7 +1,7 @@
 from itertools import product
 from random import shuffle, choice
 
-from terminal_playing_cards import Card
+from terminal_playing_cards import Card, View
 
 
 class Cards:
@@ -32,13 +32,22 @@ class Cards:
             cards.append(card)
         return cards
 
-    def get_card(self, amount) -> list:
+    @staticmethod
+    def get_cards_points(cards) -> float:
+        score = sum([card.value for card in cards])
+        return score
+
+    def get_cards(self, amount=1) -> list:
         cards: list = []
         for _ in range(amount):
             card = choice(self.deck)
             self.deck.remove(card)
             cards.append(card)
         return cards
+
+    @staticmethod
+    def get_view_cards(cards):
+        print(View(cards))
 
     def __len__(self):
         return len(self.deck)
