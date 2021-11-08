@@ -23,14 +23,13 @@ class Game:
                 player.show_cards()
                 self.player_process_game(player)
                 if player.score > 21:
-                    player.ingame = False
+                    player.in_game = False
                     print(f"{player.name} leaves the game.")
                 elif player.score == 21:
                     print(f"{player.name} won!!")
                     self.playing = False
 
-    @staticmethod
-    def set_players():
+    def set_players(self):
         while True:
             try:
                 number_players = int(input("Please, enter number of players: "))
@@ -38,20 +37,19 @@ class Game:
                 break
             except:
                 print("Nope")
-        players = [Player(False) for _ in range(number_players)]
-        players.append(Player(True))
+        players = [Player(isDealer=False) for _ in range(number_players)]
+        players.append(Player(isDealer=True))
         for index, player in enumerate(players):
             player.name = player.get_name(index)
-            player.hit(cards=Cards().get_cards(amount=2))
+            player.hit(cards=self.deck.get_cards(amount=2))
         return players
 
-    @staticmethod
-    def player_process_game(player):
+    def player_process_game(self, player):
         available_actions = ("hit", "stand")
         if player.isDealer:
             time.sleep(randint(1, 6))
             if player.score <= 17:
-                player.hit(cards=Cards().get_cards())
+                player.hit(cards=self.deck.get_cards())
                 player.show_cards()
             elif player.score > 17:
                 print("Dealer stood.")
@@ -61,7 +59,7 @@ class Game:
                 if player_action in available_actions:
                     break
             if player_action == "hit":
-                player.hit(cards=Cards().get_cards())
+                player.hit(cards=self.deck.get_cards())
                 player.show_cards()
             elif player_action == "stand":
                 print(f"{player.name} stood.")
