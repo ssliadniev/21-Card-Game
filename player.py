@@ -9,7 +9,7 @@ class Player:
         self.isDealer: bool = isDealer
         self.name: str
         self.score: float = self.get_points()
-        self.ingame: bool = True
+        self.in_game: bool = True
 
     def hit(self, cards) -> None:
         self.cards.extend(cards)
@@ -27,9 +27,6 @@ class Player:
         return self.score
 
     def show_cards(self) -> None:
-        if self.isDealer:
-            print(f"\nDealer's cards:")
-        else:
-            print(f"\n{self.name}'s cards:")
+        print(f"\n{self.name}'s cards:")
         Cards.get_view_cards(self.cards)
         print(f"Score: {self.score}")
